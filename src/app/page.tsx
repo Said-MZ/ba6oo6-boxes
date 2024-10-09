@@ -35,6 +35,8 @@ const TreasureHunt: NextPage = () => {
   });
   // const [showHint, setShowHint] = useState<boolean>(true);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
+  const [secretTaps, setSecretTaps] = useState(0);
+  const [showResetButton, setShowResetButton] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem("treasureHuntState");
@@ -47,6 +49,34 @@ const TreasureHunt: NextPage = () => {
       newBoxes[index] = { ...newBoxes[index], isTreasure: true };
       setBoxes(newBoxes);
     }
+
+    // Secret reset timer
+    let tapTimer: NodeJS.Timeout;
+
+    const handleSecretTap = () => {
+      setSecretTaps((prev) => {
+        if (prev + 1 >= 5) {
+          setShowResetButton(true);
+          return 0;
+        }
+        return prev + 1;
+      });
+
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => setSecretTaps(0), 3000);
+    };
+
+    const secretArea = document.getElementById("secretResetArea");
+    if (secretArea) {
+      secretArea.addEventListener("click", handleSecretTap);
+    }
+
+    return () => {
+      if (secretArea) {
+        secretArea.removeEventListener("click", handleSecretTap);
+      }
+      clearTimeout(tapTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -78,10 +108,10 @@ const TreasureHunt: NextPage = () => {
     setGameState(newGameState);
   };
 
-  // const handleReset = () => {
-  //   localStorage.removeItem("treasureHuntState");
-  //   window.location.reload();
-  // };
+  const handleReset = () => {
+    localStorage.removeItem("treasureHuntState");
+    window.location.reload();
+  };
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -138,7 +168,7 @@ const TreasureHunt: NextPage = () => {
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="bg-white text-[#A3051D] p-8 rounded-lg shadow-2xl max-w-md w-full"
+                className="bg-white text-[#A3051D] p-4 rounded-lg shadow-2xl max-w-md w-full"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
@@ -267,6 +297,18 @@ const TreasureHunt: NextPage = () => {
           </p>
         </div>
       </div>
+      <div
+        id="secretResetArea"
+        className="fixed bottom-0 right-0 w-16 h-16 bg-transparent z-50"
+      />
+      {showResetButton && (
+        <Button
+          onClick={handleReset}
+          className="fixed bottom-4 right-4 bg-[#A3051D] hover:bg-[#7D0416] text-white z-50"
+        >
+          Reset Game
+        </Button>
+      )}
     </div>
   );
 };
