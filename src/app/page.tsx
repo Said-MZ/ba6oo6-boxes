@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -34,7 +33,7 @@ const TreasureHunt: NextPage = () => {
     treasureCode: "Ba6oooo6 🐥",
     winTimestamp: null,
   });
-  const [showHint, setShowHint] = useState<boolean>(true);
+  // const [showHint, setShowHint] = useState<boolean>(true);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
   useEffect(() => {
@@ -79,10 +78,10 @@ const TreasureHunt: NextPage = () => {
     setGameState(newGameState);
   };
 
-  const handleReset = () => {
-    localStorage.removeItem("treasureHuntState");
-    window.location.reload();
-  };
+  // const handleReset = () => {
+  //   localStorage.removeItem("treasureHuntState");
+  //   window.location.reload();
+  // };
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
