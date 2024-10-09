@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
-import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
