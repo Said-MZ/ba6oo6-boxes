@@ -5,8 +5,6 @@ import { NextPage } from "next";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { Github } from "lucide-react";
 
 const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
@@ -33,9 +31,7 @@ const TreasureHunt: NextPage = () => {
     treasureCode: "Ba6oooo6 🐥",
     winTimestamp: null,
   });
-  // const [showHint, setShowHint] = useState<boolean>(true);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
-  const [secretTaps, setSecretTaps] = useState(0);
   const [showResetButton, setShowResetButton] = useState(false);
 
   useEffect(() => {
@@ -50,20 +46,20 @@ const TreasureHunt: NextPage = () => {
       setBoxes(newBoxes);
     }
 
-    // Secret reset timer
+    let tapCount = 0;
     let tapTimer: NodeJS.Timeout;
 
     const handleSecretTap = () => {
-      setSecretTaps((prev) => {
-        if (prev + 1 >= 5) {
-          setShowResetButton(true);
-          return 0;
-        }
-        return prev + 1;
-      });
+      tapCount++;
+      if (tapCount >= 5) {
+        setShowResetButton(true);
+        tapCount = 0;
+      }
 
       clearTimeout(tapTimer);
-      tapTimer = setTimeout(() => setSecretTaps(0), 3000);
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+      }, 3000);
     };
 
     const secretArea = document.getElementById("secretResetArea");
@@ -125,7 +121,6 @@ const TreasureHunt: NextPage = () => {
     return `${formattedHours}:${minutes}:${seconds}:${milliseconds} ${ampm}`;
   };
 
-  console.log("treasureIndex 🤫", treasureIndex);
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#A3051D] via-[#7D0416] to-[#570310] text-white">
       <main className="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
@@ -137,20 +132,6 @@ const TreasureHunt: NextPage = () => {
         >
           Treasure Hunt
         </motion.h1>
-        <motion.div
-          className="mb-2"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link
-            href="/"
-            className="flex items-center text-white bg-black/50 px-2 py-4 rounded-xl border-2 gap-2"
-          >
-            <Github className="w-6 h-6" />
-            view code on github
-          </Link>
-        </motion.div>
         <motion.p
           className="text-lg text-center text-muted mb-12"
           initial={{ y: -50, opacity: 0 }}
